@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Wider form: col-md-8 -->
+        <div class="col-md-8">
+            <div class="card border-0 rounded-3">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3 class="mb-0">💉 Request Blood</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('request_blood') }}">
+
+                        <div class="mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" name="patient_name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Age</label>
+                            <input type="number" name="age" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Blood Group Needed</label>
+                            <select name="blood_group" class="form-select" required>
+                                <option value="">-- Select --</option>
+                                {% for bg in blood_groups %}
+                                <option value="{{ bg }}">{{ bg }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Units Required</label>
+                            <input type="number" name="units" class="form-control" required min="1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hospital Name</label>
+                            <input type="text" name="hospital" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="text" name="contact" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
