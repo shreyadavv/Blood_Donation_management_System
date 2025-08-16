@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-3">
+  <h3 class="text-center mb-3">📊 Blood Donation Dashboard</h3>
+  
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Donors by Blood Group -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <h6>Donors by Blood Group</h6>
+            <canvas id="donorsByGroup" class="small-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests by Blood Group -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <h6>Requests by Blood Group</h6>
+            <canvas id="requestsByGroup" class="small-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Urgency Levels -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <h6>Urgency Levels</h6>
+            <canvas id="urgencies" class="small-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row for bar + line chart side by side -->
+    <div class="row mt-3">
+      <!-- Donors by Location -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Donors by Location</h6>
+            <canvas id="donorsByLocation"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donations Over Time -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Donations Over Time</h6>
+            <canvas id="donationsOverTime"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Donors by Blood Group
+  new Chart(document.getElementById("donorsByGroup"), {
+    type: "pie",
+    data: {
+      labels: {{ donors_by_group | map(attribute="blood_group") | list | tojson }},
+      datasets: [{
+        data: {{ donors_by_group | map(attribute="count") | list | tojson }},
+        backgroundColor: ["#ff6384","#36a2eb","#ffce56","#4bc0c0","#9966ff","#ff9f40","#8dd17e","#c94f7c"]
+      }]
+    },
+    options: { 
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 10 } } } },
+      maintainAspectRatio: false
+    }
+  });
+
+  // Requests by Blood Group
+  new Chart(document.getElementById("requestsByGroup"), {
+    type: "pie",
+    data: {
+      labels: {{ requests_by_group | map(attribute="blood_group") | list | tojson }},
+      datasets: [{
+        data: {{ requests_by_group | map(attribute="count") | list | tojson }},
+        backgroundColor: ["#36a2eb","#ff6384","#4bc0c0","#9966ff","#ffce56","#8dd17e","#ff9f40","#c94f7c"]
+      }]
+    },
+    options: { 
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 10 } } } },
+      maintainAspectRatio: false
+    }
+  });
+
+  // Urgency Levels
+  new Chart(document.getElementById("urgencies"), {
+    type: "doughnut",
+    data: {
+      labels: {{ urgencies | map(attribute="urgency") | list | tojson }},
+      datasets: [{
+        data: {{ urgencies | map(attribute="count") | list | tojson }},
+        backgroundColor: ["#e74c3c", "#f1c40f", "#2ecc71"]
+      }]
+    },
+    options: { 
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 10 } } } },
+      maintainAspectRatio: false
+    }
+  });
+
+  // Donors by Location
+  new Chart(document.getElementById("donorsByLocation"), {
+    type: "bar",
+    data: {
+      labels: {{ donors_by_location | map(attribute="location") | list | tojson }},
+      datasets: [{
+        label: "Donors",
+        data: {{ donors_by_location | map(attribute="count") | list | tojson }},
+        backgroundColor: "#36a2eb"
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { font: { size: 11 } } },
+                x: { ticks: { font: { size: 11 } } } }
+    }
+  });
+
+  // Donations Over Time
+  new Chart(document.getElementById("donationsOverTime"), {
+    type: "line",
+    data: {
+      labels: {{ donations_over_time | map(attribute="month") | list | tojson }},
+      datasets: [{
+        label: "Donations",
+        data: {{ donations_over_time | map(attribute="count") | list | tojson }},
+        borderColor: "#ff6384",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+        pointHoverRadius: 4
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+  });
+</script>
+{% endblock %}
