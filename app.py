@@ -191,6 +191,79 @@ def admin():
     return render_template("admin.html", authorized=True, donors=donors, reqs=reqs)
 
 
+@app.route("/visuals")
+def visuals():
+    conn = get_conn()
+    cur = conn.cursor()
+
+    # Donors per blood group
+    cur.execute("SELECT blood_group, COUNT(*) as count FROM donors GROUP BY blood_group")
+    donors_by_group = cur.fetchall()
+
+    # Donors per location
+    cur.execute("SELECT location, COUNT(*) as count FROM donors GROUP BY location ORDER BY count DESC LIMIT 5")
+    donors_by_location = cur.fetchall()
+
+    # Requests per blood group
+    cur.execute("SELECT blood_group, COUNT(*) as count FROM requests GROUP BY blood_group")
+    requests_by_group = cur.fetchall()
+
+    # Urgency levels
+    cur.execute("SELECT urgency, COUNT(*) as count FROM requests GROUP BY urgency")
+    urgencies = cur.fetchall()
+
+    # Donations over time
+    cur.execute("SELECT substr(last_donated,1,7) as month, COUNT(*) as count FROM donors WHERE last_donated IS NOT NULL GROUP BY month ORDER BY month")
+    donations_over_time = cur.fetchall()
+
+    conn.close()
+
+    # ✅ If no real data → use demo placeholders
+    if not donors_by_group:
+        donors_by_group = [
+            {"blood_group": "A+", "count": 12},
+            {"blood_group": "O+", "count": 20},
+            {"blood_group": "B+", "count": 9},
+            {"blood_group": "AB-", "count": 4},
+        ]
+    if not donors_by_location:
+        donors_by_location = [
+            {"location": "New York", "count": 10},
+            {"location": "Chicago", "count": 8},
+            {"location": "Los Angeles", "count": 6},
+            {"location": "Boston", "count": 5},
+            {"location": "Houston", "count": 4},
+        ]
+    if not requests_by_group:
+        requests_by_group = [
+            {"blood_group": "A+", "count": 5},
+            {"blood_group": "O+", "count": 7},
+            {"blood_group": "B-", "count": 2},
+        ]
+    if not urgencies:
+        urgencies = [
+            {"urgency": "High", "count": 6},
+            {"urgency": "Medium", "count": 4},
+            {"urgency": "Low", "count": 2},
+        ]
+    if not donations_over_time:
+        donations_over_time = [
+            {"month": "2025-01", "count": 5},
+            {"month": "2025-02", "count": 7},
+            {"month": "2025-03", "count": 3},
+            {"month": "2025-04", "count": 6},
+            {"month": "2025-05", "count": 4},
+        ]
+
+    return render_template(
+        "visuals.html",
+        donors_by_group=donors_by_group,
+        donors_by_location=donors_by_location,
+        requests_by_group=requests_by_group,
+        urgencies=urgencies,
+        donations_over_time=donations_over_time,
+    )
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
