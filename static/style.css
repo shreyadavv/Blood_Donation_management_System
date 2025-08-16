@@ -2,3 +2,4 @@ body { background-color: #fff; }
 .navbar-brand { letter-spacing: 0.5px; }
 .table thead th { white-space: nowrap; }
 .badge { font-size: 0.85rem; }
+.small-chart {height: 180px !important;}
