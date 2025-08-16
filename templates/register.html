@@ -3,68 +3,76 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
 
-        <div class="col-md-8">
+            <!-- Page Title -->
+            <h2 class="text-center mb-4 text-danger fw-bold">🩸 Register as Donor</h2>
 
-            <div class="card border-0 rounded-3">
-                <div class="card-header bg-danger text-white text-center">
-                    <h3 class="mb-0">🩸 Register as Donor</h3>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{{ url_for('register') }}">
-
-                        <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Age</label>
-                            <input type="number" name="age" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Gender</label>
-                            <select name="gender" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                <option value="Male">👨 Male</option>
-                                <option value="Female">👩 Female</option>
-                                <option value="Other">⚧ Other</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Blood Group</label>
-                            <select name="blood_group" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                {% for bg in blood_groups %}
-                                <option value="{{ bg }}">{{ bg }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Contact</label>
-                            <input type="text" name="contact" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" name="location" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Last Donated</label>
-                            <input type="date" name="last_donated" class="form-control">
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-danger btn-lg">Register</button>
-                        </div>
-                    </form>
-                </div>
-                
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- Form -->
+            <form method="POST" action="{{ url_for('register') }}" class="p-4 border rounded bg-light">
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Age</label>
+                    <input type="number" name="age" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Gender</label>
+                    <select name="gender" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        <option value="Male">👨 Male</option>
+                        <option value="Female">👩 Female</option>
+                        <option value="Other">⚧ Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Blood Group</label>
+                    <select name="blood_group" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        {% for bg in blood_groups %}
+                        <option value="{{ bg }}">{{ bg }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Contact</label>
+                    <input type="text" name="contact" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Location</label>
+                    <input type="text" name="location" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Last Donated</label>
+                    <input type="date" name="last_donated" class="form-control">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-danger btn-lg">Register</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>

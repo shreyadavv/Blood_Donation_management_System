@@ -145,7 +145,6 @@ def request_blood():
         if blood_group not in BLOOD_GROUPS: errors.append("Select a valid blood group")
         if not contact: errors.append("Contact is required")
         if not location: errors.append("Location is required")
-
         if errors:
             for e in errors:
                 flash(e, "danger")

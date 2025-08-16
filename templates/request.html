@@ -1,64 +1,80 @@
 {% extends "base.html" %}
-
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <!-- Wider form: col-md-8 -->
-        <div class="col-md-8">
-            <div class="card border-0 rounded-3">
-                <div class="card-header bg-danger text-white text-center">
-                    <h3 class="mb-0">💉 Request Blood</h3>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{{ url_for('request_blood') }}">
+        <div class="col-lg-8 col-md-10">
 
-                        <div class="mb-3">
-                            <label class="form-label">Patient Name</label>
-                            <input type="text" name="patient_name" class="form-control" required>
-                        </div>
+            <!-- Page Title -->
+            <h2 class="text-center mb-4 text-danger fw-bold">Blood Request Form</h2>
 
-                        <div class="mb-3">
-                            <label class="form-label">Age</label>
-                            <input type="number" name="age" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Blood Group Needed</label>
-                            <select name="blood_group" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                {% for bg in blood_groups %}
-                                <option value="{{ bg }}">{{ bg }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Units Required</label>
-                            <input type="number" name="units" class="form-control" required min="1">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Hospital Name</label>
-                            <input type="text" name="hospital" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Contact Number</label>
-                            <input type="text" name="contact" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" name="location" class="form-control" required>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-danger btn-lg">Submit Request</button>
-                        </div>
-                    </form>
-                </div>
-                
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- Form -->
+            <form method="POST" action="/request" class="p-4 border rounded bg-light">
+
+                <!-- Patient Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-semibold">Patient Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+
+                <!-- Blood Group -->
+                <div class="mb-3">
+                    <label for="blood_group" class="form-label fw-semibold">Blood Group</label>
+                    <select id="blood_group" name="blood_group" class="form-select" required>
+                        <option value="">-- Select Blood Group --</option>
+                        {% for bg in blood_groups %}
+                        <option value="{{ bg }}">{{ bg }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Contact -->
+                <div class="mb-3">
+                    <label for="contact" class="form-label fw-semibold">Contact Number</label>
+                    <input type="text" id="contact" name="contact" class="form-control" required>
+                </div>
+
+                <!-- Location -->
+                <div class="mb-3">
+                    <label for="location" class="form-label fw-semibold">Location</label>
+                    <input type="text" id="location" name="location" class="form-control" required>
+                </div>
+
+                <!-- Urgency -->
+                <div class="mb-3">
+                    <label for="urgency" class="form-label fw-semibold">Urgency</label>
+                    <select id="urgency" name="urgency" class="form-select">
+                        <option value="">-- Select Urgency --</option>
+                        <option value="Low">Low</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+                <!-- Note -->
+                <div class="mb-3">
+                    <label for="note" class="form-label fw-semibold">Additional Note</label>
+                    <textarea id="note" name="note" class="form-control" rows="3"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-danger btn-lg">Submit Blood Request</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
